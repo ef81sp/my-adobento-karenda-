@@ -21,7 +21,9 @@
     button {
       font-size: 3rem;
     }
-
+    p {
+      text-align: center;
+    }
     #output-area {
       font-size: 10rem;
       height: 10rem;
@@ -89,8 +91,9 @@
 
   <body>
     <div>
+      <p>※音が出ます</p>
       <button id="add-button" type="button">add</button>
-      <button id="reset-button" style="display: none;">reset</button>
+      <button id="reset-button" style="display: none">reset</button>
     </div>
     <div id="output-area">
       <span id="output"></span>
@@ -99,6 +102,13 @@
   </body>
 
   <script>
+    // audio
+    const kira = new Audio("./chari10.wav")
+    const shu = new Audio("./tm2_swing000.wav")
+    const pyoro = new Audio("./pyoro68.wav")
+    const smallBomb = new Audio("./tm2_bom001.wav")
+    const bigBomb = new Audio("./tm2_bom005.wav")
+
     function randomSign() {
       return Math.random() < 0.5 ? -1 : 1
     }
@@ -150,6 +160,7 @@
       }
 
       document.body.appendChild(sparkle)
+      kira.play()
       setTimeout(() => sparkle.remove(), 1000)
     }
 
@@ -168,48 +179,69 @@
       timeouts = []
     }
 
-    document.querySelector("#add-button").addEventListener("click", function () {
-      clearAllTimeouts()
-      const outputArea = document.querySelector("#output-area")
-      outputArea.classList.add("cut-in")
-      timeouts.push(setTimeout(() => {
+    document
+      .querySelector("#add-button")
+      .addEventListener("click", function () {
+        clearAllTimeouts()
+        const outputArea = document.querySelector("#output-area")
+        outputArea.classList.add("cut-in")
+        shu.play()
+        timeouts.push(
+          setTimeout(() => {
+            const output = document.querySelector("#output")
+            output.innerText = "🍱"
+            output.classList.add("float-up")
+            pyoro.play()
+          }, 1000)
+        )
+        timeouts.push(
+          setTimeout(() => {
+            document.querySelector("#conclusion").innerText = "add弁当"
+            smallBomb.play()
+          }, 2000)
+        )
+        timeouts.push(
+          setTimeout(() => {
+            startSparkles()
+            timeouts.push(
+              setTimeout(() => {
+                document.querySelector("#conclusion").innerText = ""
+              }, 800)
+            )
+          }, 3000)
+        )
+        timeouts.push(
+          setTimeout(() => {
+            document.querySelector("#conclusion").innerText = "add弁当"
+            smallBomb.play()
+            timeouts.push(
+              setTimeout(() => {
+                document.querySelector("#conclusion").innerHTML =
+                  "add弁当<br>可憐だー"
+                bigBomb.play()
+              }, 800)
+            )
+          }, 6000)
+        )
+        document.querySelector("#add-button").style.display = "none"
+        document.querySelector("#reset-button").style.display = "inline-block"
+      })
+
+    document
+      .querySelector("#reset-button")
+      .addEventListener("click", function () {
+        clearAllTimeouts()
+        const outputArea = document.querySelector("#output-area")
         const output = document.querySelector("#output")
-        output.innerText = "🍱"
-        output.classList.add("float-up")
-      }, 1000))
-      timeouts.push(setTimeout(() => {
-        document.querySelector("#conclusion").innerText = "add弁当"
-      }, 2000))
-      timeouts.push(setTimeout(() => {
-        startSparkles()
-        timeouts.push(setTimeout(() => {
-          document.querySelector("#conclusion").innerText = ""
-        }, 800))
-      }, 3000))
-      timeouts.push(setTimeout(() => {
-        document.querySelector("#conclusion").innerText = "add弁当"
-        timeouts.push(setTimeout(() => {
-          document.querySelector("#conclusion").innerHTML =
-            "add弁当<br>可憐だー"
-        }, 800))
-      }, 6000))
-      document.querySelector("#add-button").style.display = "none"
-      document.querySelector("#reset-button").style.display = "inline-block"
-    })
+        const conclusion = document.querySelector("#conclusion")
 
-    document.querySelector("#reset-button").addEventListener("click", function () {
-      clearAllTimeouts()
-      const outputArea = document.querySelector("#output-area")
-      const output = document.querySelector("#output")
-      const conclusion = document.querySelector("#conclusion")
-
-      outputArea.classList.remove("cut-in")
-      output.innerText = ""
-      output.classList.remove("float-up")
-      conclusion.innerText = ""
-      stopSparkles()
-      document.querySelector("#reset-button").style.display = "none"
-      document.querySelector("#add-button").style.display = "inline-block"
-    })
+        outputArea.classList.remove("cut-in")
+        output.innerText = ""
+        output.classList.remove("float-up")
+        conclusion.innerText = ""
+        stopSparkles()
+        document.querySelector("#reset-button").style.display = "none"
+        document.querySelector("#add-button").style.display = "inline-block"
+      })
   </script>
 </html>
